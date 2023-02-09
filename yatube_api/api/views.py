@@ -3,6 +3,9 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, permissions
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework import filters
+from rest_framework.mixins import ListModelMixin, CreateModelMixin
+from rest_framework.viewsets import GenericViewSet
+
 
 from posts.models import Post, Group
 from .permissions import IsAuthorOrReadOnly
@@ -45,7 +48,7 @@ class GroupViewSet(viewsets.ReadOnlyModelViewSet):
                           IsAuthorOrReadOnly)
 
 
-class FollowViewSet(viewsets.ModelViewSet):
+class FollowViewSet(CreateModelMixin, ListModelMixin, GenericViewSet):
     serializer_class = FollowSerializer
     permission_classes = (permissions.IsAuthenticated,)
     filter_backends = (DjangoFilterBackend, filters.SearchFilter)
